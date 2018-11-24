@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Map from "./Map";
+import { GoogleApiWrapper } from "google-maps-react";
+import Autocomplete from "react-google-autocomplete";
+
 import "./App.css";
 
 class App extends Component {
@@ -23,6 +26,16 @@ class App extends Component {
   render() {
     return (
       <div>
+        <p>Hello</p>
+        <Autocomplete
+          style={{ width: "90%" }}
+          onPlaceSelected={place => {
+            console.log(place);
+          }}
+          types={["(regions)"]}
+          componentRestrictions={{ country: "fi" }}
+        />
+
         <Map
           markers={this.state.markers}
           onMapClick={this.requestApi.bind(this)}
@@ -32,4 +45,7 @@ class App extends Component {
   }
 }
 
-export default App;
+export default GoogleApiWrapper({
+  apiKey: `AIzaSyCR7DA6hA3Bm5m9tpxeFP9eW_teXWD-qrw`,
+  libraries: ["places", "visualization"]
+})(App);

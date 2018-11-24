@@ -1,69 +1,67 @@
 import React, { Component } from "react";
+import "./Map.css";
+import {
+  Map,
+  InfoWindow,
+  Marker,
+  GoogleApiWrapper,
+  Listing
+} from "google-maps-react";
 
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
-
-const containerStyle = {
-  dislay: "flex"
-};
 export class MapContainer extends Component {
+  autocomplete = React.createRef();
   constructor(props) {
     super(props);
     this.state = {
       markerData: null,
       activeMarker: undefined,
-      infowWindow: false
+      infowWindow: false,
+      position: null
     };
+  }
+  fetchPlaces(mapProps, map) {
+    const { google } = mapProps;
+    const service = new google.maps.places.PlacesService(map);
   }
   mapClicked(a, b, c) {
     this.props.onMapClick(c.latLng.lat(), c.latLng.lng());
   }
+  onSubmit(e) {
+    e.preventDefault();
+  }
 
   render() {
-    const { markerData, activeMarker, infowWindow } = this.state;
+    const { position } = this.state;
     return (
-      <div style={containerStyle} className="map-container">
-        <div>
-          {markerData && (
-            <>
-              <h2>{markerData.name}</h2>{" "}
-            </>
-          )}
+      <div className="map-container">
+        <div className="map">
+          <Map
+            onReady={this.fetchPlaces.bind(this)}
+            google={this.props.google}
+            onClick={this.mapClicked.bind(this)}
+            zoom={14}
+          >
+            <Marker position={position} />
+          </Map>
         </div>
-        <Map
-          initialCenter={{
-            lat: 60.169941,
-            lng: 24.938841
-          }}
-          google={this.props.google}
-          onClick={this.mapClicked.bind(this)}
-          zoom={14}
-          style={{
-            width: "500px",
-            height: "500px"
-          }}
-        >
-          {this.props.markers.map((m, key) => (
-            <Marker
-              key={key}
-              onClick={(props, marker, e) => {
-                console.log(m);
-                this.setState({
-                  markerData: m,
-                  activeMarker: marker,
-                  infowWindow: true
-                });
-              }}
-              name={m.name}
-              position={{ lat: m.latitude, lng: m.longitude }}
-            />
-          ))}
-        </Map>
-        }
+        <div className="mapInfo">
+          <div>
+            <form onSubmit={this.onSubmit.bind(this)}>
+              <input
+                placeholder="Enter a location"
+                ref={ref => (this.autocomplete = ref)}
+                type="text"
+              />
+              <input type="submit" value="Go" />
+            </form>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 export default GoogleApiWrapper({
-  apiKey: `AIzaSyCR7DA6hA3Bm5m9tpxeFP9eW_teXWD-qrw`
+  apiKey: `AIzaSyCR7DA6hA3Bm5m9tpxeFP9eW_teXWD-qrw`,
+  libraries: ["places", "visualization"]
 })(MapContainer);
