@@ -41,6 +41,9 @@ class App extends Component {
 
   async rafayApi() {
     const { center, startDate, tags } = this.state;
+    if (!center) {
+      return;
+    }
     const RafayApiData = await axios.get(
       `http://gravity02-dev.azurewebsites.net/api/events?lat=${
         center.lat
@@ -80,6 +83,7 @@ class App extends Component {
   }
 
   render() {
+    const inputDisabled = this.state.center;
     return (
       <div className="main-app-container">
         <h2>Actually Useful Digital Advertisement</h2>
@@ -98,11 +102,19 @@ class App extends Component {
             componentRestrictions={{ country: "fi" }}
           />
           <DatePicker
+            disabled={inputDisabled}
             selected={this.state.startDate}
             onChange={this.onChange}
           />
-          <TagsInput value={this.state.tags} onChange={this.handleTagChange} />
-          <select onChange={this.changeView.bind(this)}>
+          <TagsInput
+            value={this.state.tags}
+            disabled={inputDisabled}
+            onChange={this.handleTagChange}
+          />
+          <select
+            disabled={inputDisabled}
+            onChange={this.changeView.bind(this)}
+          >
             <option defaultValue value="map">
               Map
             </option>
