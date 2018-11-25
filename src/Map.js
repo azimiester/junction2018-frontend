@@ -24,7 +24,9 @@ export class MapContainer extends Component {
   }
 
   render() {
+    console.log(loudspeaker);
     const { position, initialCenter } = this.state;
+    const markers = this.props.markers || [];
     const center = this.props.center || initialCenter;
     return (
       <div className="map-container">
@@ -39,7 +41,7 @@ export class MapContainer extends Component {
               <Marker
                 position={this.props.center}
                 icon={{
-                  url: { loudspeaker },
+                  url: loudspeaker,
                   anchor: new this.props.google.maps.Point(32, 32),
                   scaledSize: new this.props.google.maps.Size(64, 64)
                 }}
@@ -55,6 +57,10 @@ export class MapContainer extends Component {
                 fillOpacity={0.35}
               />
             )}
+            {markers.length > 0 &&
+              markers.map(m => (
+                <Marker position={{ lat: m.latitude, lng: m.longitude }} />
+              ))}
           </Map>
         </div>
         <div className="mapInfo" />
