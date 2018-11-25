@@ -12,10 +12,10 @@ import "./App.css";
 class App extends Component {
     state = {
         startDate: new Date(),
-        lat: undefined,
-        lng: undefined,
         markers: [],
-        tags: []
+        tags: [],
+        polyCords: null,
+        center: null
     };
 
   async requestApi(lat, lng) {
@@ -39,12 +39,26 @@ class App extends Component {
         <h3>Telia Challenge</h3>
           <div className="input-container">
               <Autocomplete
-                  style={{width: '40%'}}
-                  onPlaceSelected={(place) => {
-                      console.log(place);
-                  }}
-                  types={['(regions)']}
-                  componentRestrictions={{country: "ru"}}
+                style={{width: '40%'}}
+                onPlaceSelected={async place => {
+                    const { lat, lng } = place.geometry.location;
+                    this.setState({ center: { lat: lat(), lng: lng() } });
+                    const apiData = await axios.get(
+                        `http://10.100.31.58:8888/grid_id?lat=${lat()}&long=${lng()}`
+                    );
+                    const polyCords = apiData.data.poly_cords;
+                    const RafayApiData = await axios.get(
+                        `http://gravity02-dev.azurewebsites.net/api/events?lat=${lat()}&lon=${lng()}&range=${1000}`
+                    );
+                    if (polyCords) {
+                        this.setState({
+                            polyCords: polyCords.map(p => ({ lat: p[0], lng: p[1] })),
+                            markers: RafayApiData.data
+                        });
+                    }
+                }}
+                types={["(regions)"]}
+                componentRestrictions={{ country: "fi" }}
               />
               <DatePicker
                   selected={this.state.startDate}
@@ -52,6 +66,13 @@ class App extends Component {
               />
               <TagsInput value={this.state.tags} onChange={this.handleTagChange} />
           </div>
+
+          <Map
+                  center={this.state.center}
+                  markers={this.state.markers}
+                  polyCords={this.state.polyCords}
+                  onMapClick={() => {}}
+              />
       </div>
     );
   }

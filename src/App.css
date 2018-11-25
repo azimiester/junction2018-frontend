@@ -35,6 +35,10 @@
   padding: 10px;
 }
 
+.input-container{
+  margin-bottom: 10px;
+}
+
 .input-container input {
   height: 35px;
   margin-right: 5px;
