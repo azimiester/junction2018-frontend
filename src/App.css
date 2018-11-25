@@ -30,3 +30,21 @@
     transform: rotate(360deg);
   }
 }
+
+.main-app-container {
+  padding: 10px;
+}
+
+.input-container input {
+  height: 35px;
+  margin-right: 5px;
+}
+
+.react-tagsinput {
+  height: 35px;
+  width: 30%;
+}
+
+.input-container {
+  display: flex;
+}
