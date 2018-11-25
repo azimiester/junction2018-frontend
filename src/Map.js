@@ -7,6 +7,15 @@ import {
   Listing,
   Polygon
 } from "google-maps-react";
+import {
+  Card,
+  CardText,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  Button
+} from "reactstrap";
+
 import loudspeaker from "./loudspeaker.png";
 
 export class MapContainer extends Component {
@@ -75,24 +84,29 @@ export class MapContainer extends Component {
         <div className="mapInfo">
           <hr />
           {selectedEvent && (
-            <>
-              <h2>{selectedEvent.name}</h2>
-              <p>{selectedEvent.address}</p>
-              {selectedEvent.info_url && (
-                <a href={selectedEvent.info_url}> More Info</a>
-              )}
-              <p>
-                Tags:{" "}
-                {selectedEvent.tags.map(t => (
-                  <>
-                    <a href="#" onClick={this.tagClicked.bind(this, t)}>
-                      {t}
-                    </a>
-                    {", "}
-                  </>
-                ))}
-              </p>
-            </>
+            <Card>
+              <CardBody>
+                <CardTitle>{selectedEvent.name}</CardTitle>
+                <CardText>{selectedEvent.address}</CardText>
+
+                {selectedEvent.info_url && (
+                  <Button>
+                    <a href={selectedEvent.info_url}> More Info</a>
+                  </Button>
+                )}
+                <CardText>
+                  Tags:{" "}
+                  {selectedEvent.tags.map(t => (
+                    <>
+                      <a href="#" onClick={this.tagClicked.bind(this, t)}>
+                        {t}
+                      </a>
+                      {", "}
+                    </>
+                  ))}
+                </CardText>
+              </CardBody>
+            </Card>
           )}
         </div>
       </div>

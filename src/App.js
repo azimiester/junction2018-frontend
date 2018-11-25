@@ -6,6 +6,7 @@ import Autocomplete from "react-google-autocomplete";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TagsInput from "react-tagsinput";
+import Analysis from "./Analysis";
 import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
 import "./App.css";
 
@@ -15,7 +16,8 @@ class App extends Component {
     markers: [],
     tags: [],
     polyCords: null,
-    center: null
+    center: null,
+    selectedView: "map"
   };
 
   async requestApi(lat, lng) {
@@ -73,6 +75,9 @@ class App extends Component {
       });
     }
   }
+  changeView(e) {
+    this.setState({ selectedView: e.target.value });
+  }
 
   render() {
     return (
@@ -81,7 +86,7 @@ class App extends Component {
         <br />
         <div className="input-container">
           <Autocomplete
-            style={{ width: "40%" }}
+            style={{ width: "35%" }}
             onPlaceSelected={place => {
               const { lat, lng } = place.geometry.location;
               this.setState({ center: { lat: lat(), lng: lng() } }, () => {
@@ -97,15 +102,24 @@ class App extends Component {
             onChange={this.onChange}
           />
           <TagsInput value={this.state.tags} onChange={this.handleTagChange} />
+          <select onChange={this.changeView.bind(this)}>
+            <option defaultValue value="map">
+              Map
+            </option>
+            <option value="analysis">Analysis</option>
+          </select>
         </div>
+        {this.state.selectedView == "map" && (
+          <Map
+            center={this.state.center}
+            markers={this.state.markers}
+            polyCords={this.state.polyCords}
+            onMapClick={() => {}}
+            addTag={this.addTag.bind(this)}
+          />
+        )}
 
-        <Map
-          center={this.state.center}
-          markers={this.state.markers}
-          polyCords={this.state.polyCords}
-          onMapClick={() => {}}
-          addTag={this.addTag.bind(this)}
-        />
+        {this.state.selectedView == "analysis" && <Analysis />}
       </div>
     );
   }

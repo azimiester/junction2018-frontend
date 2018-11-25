@@ -34,9 +34,11 @@
 .main-app-container {
   padding: 10px;
 }
-input {
+input,
+select {
   font-size: 16px;
   padding: 2px;
+  color: black;
 }
 .input-container {
   margin-bottom: 10px;
@@ -51,6 +53,7 @@ input {
   height: 35px;
   width: 30%;
   padding: 2px;
+  margin-right: 5px;
 }
 .react-tagsinput-input {
   font-size: 16px !important;

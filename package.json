@@ -12,7 +12,8 @@
     "react-dom": "^16.6.3",
     "react-google-autocomplete": "^1.0.18",
     "react-scripts": "2.1.1",
-    "react-tagsinput": "^3.19.0"
+    "react-tagsinput": "^3.19.0",
+    "reactstrap": "^6.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
