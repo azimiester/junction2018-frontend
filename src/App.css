@@ -34,8 +34,11 @@
 .main-app-container {
   padding: 10px;
 }
-
-.input-container{
+input {
+  font-size: 16px;
+  padding: 2px;
+}
+.input-container {
   margin-bottom: 10px;
 }
 
@@ -47,8 +50,15 @@
 .react-tagsinput {
   height: 35px;
   width: 30%;
+  padding: 2px;
+}
+.react-tagsinput-input {
+  font-size: 16px !important;
 }
 
+.react-tagsinput--focused {
+  border: 1px solid #ccc;
+}
 .input-container {
   display: flex;
 }

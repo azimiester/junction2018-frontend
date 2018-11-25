@@ -33,7 +33,8 @@ class App extends Component {
   };
 
   handleTagChange = tags => {
-    this.setState({ tags });
+    this.setState({ tags: tags });
+    this.rafayApi();
   };
 
   async rafayApi() {
@@ -53,7 +54,11 @@ class App extends Component {
       });
     }
   }
-
+  addTag(t) {
+    if (this.state.tags.indexOf(t) < 0) {
+      this.setState(ps => ({ tags: ps.tags.push(t) }));
+    }
+  }
   async polyCordsApi() {
     const { center } = this.state;
 
@@ -72,7 +77,8 @@ class App extends Component {
   render() {
     return (
       <div className="main-app-container">
-        <h3>Telia Challenge</h3>
+        <h2>Actually Useful Digital Advertisement</h2>
+        <br />
         <div className="input-container">
           <Autocomplete
             style={{ width: "40%" }}
@@ -98,6 +104,7 @@ class App extends Component {
           markers={this.state.markers}
           polyCords={this.state.polyCords}
           onMapClick={() => {}}
+          addTag={this.addTag.bind(this)}
         />
       </div>
     );
