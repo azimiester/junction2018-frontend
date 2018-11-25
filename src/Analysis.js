@@ -2,7 +2,13 @@ import React, { Component } from "react";
 
 class Analysis extends Component {
   render() {
-    return <div>It works dude</div>;
+    return (
+      <div>
+        {this.props.graph && (
+          <img src={`data:image/png;base64, ${this.props.graph}`} />
+        )}
+      </div>
+    );
   }
 }
 

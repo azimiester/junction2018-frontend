@@ -17,7 +17,9 @@ class App extends Component {
     tags: [],
     polyCords: null,
     center: null,
-    selectedView: "map"
+    selectedView: "map",
+    selectedGridId: null,
+    gridPrediction: null
   };
 
   async requestApi(lat, lng) {
@@ -64,6 +66,15 @@ class App extends Component {
       this.setState(ps => ({ tags: ps.tags.push(t) }));
     }
   }
+  async analysisApi() {
+    if (!this.state.selectedGridId) {
+      return;
+    }
+    const apiData = await axios.get(
+      `http://10.100.31.58:5000/forecast/${this.state.selectedGridId}`
+    );
+    this.setState({ gridPrediction: apiData.data });
+  }
   async polyCordsApi() {
     const { center } = this.state;
 
@@ -73,9 +84,15 @@ class App extends Component {
     const polyCords = apiData.data.poly_cords;
 
     if (polyCords) {
-      this.setState({
-        polyCords: polyCords.map(p => ({ lat: p[0], lng: p[1] }))
-      });
+      this.setState(
+        {
+          selectedGridId: apiData.data.grid_id,
+          polyCords: polyCords.map(p => ({ lat: p[0], lng: p[1] }))
+        },
+        () => {
+          this.analysisApi();
+        }
+      );
     }
   }
   changeView(e) {
@@ -102,19 +119,11 @@ class App extends Component {
             componentRestrictions={{ country: "fi" }}
           />
           <DatePicker
-            disabled={inputDisabled}
             selected={this.state.startDate}
             onChange={this.onChange}
           />
-          <TagsInput
-            value={this.state.tags}
-            disabled={inputDisabled}
-            onChange={this.handleTagChange}
-          />
-          <select
-            disabled={inputDisabled}
-            onChange={this.changeView.bind(this)}
-          >
+          <TagsInput value={this.state.tags} onChange={this.handleTagChange} />
+          <select onChange={this.changeView.bind(this)}>
             <option defaultValue value="map">
               Map
             </option>
@@ -127,11 +136,24 @@ class App extends Component {
             markers={this.state.markers}
             polyCords={this.state.polyCords}
             onMapClick={() => {}}
+            estimatedUsers={
+              this.state.gridPrediction
+                ? this.state.gridPrediction.daily_mean
+                : null
+            }
             addTag={this.addTag.bind(this)}
           />
         )}
 
-        {this.state.selectedView == "analysis" && <Analysis />}
+        {this.state.selectedView == "analysis" && (
+          <Analysis
+            graph={
+              this.state.gridPrediction
+                ? this.state.gridPrediction.plot_img
+                : null
+            }
+          />
+        )}
       </div>
     );
   }

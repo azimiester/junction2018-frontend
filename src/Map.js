@@ -82,6 +82,9 @@ export class MapContainer extends Component {
           </Map>
         </div>
         <div className="mapInfo">
+          {this.props.estimatedUsers && (
+            <h3>Estimated crowd: {this.props.estimatedUsers}</h3>
+          )}
           <hr />
           {selectedEvent && (
             <Card>

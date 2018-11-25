@@ -65,3 +65,7 @@ select {
 .input-container {
   display: flex;
 }
+.card {
+  background-color: white;
+  padding: 8px;
+}
