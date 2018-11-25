@@ -82,10 +82,22 @@ export class MapContainer extends Component {
           </Map>
         </div>
         <div className="mapInfo">
+          {this.props.loading && !this.props.estimatedUsers && (
+            <p>
+              Hold on tight while we crunch some numbers to get the estimated #
+              of people.
+            </p>
+          )}
           {this.props.estimatedUsers && (
             <h3>Estimated crowd: {this.props.estimatedUsers}</h3>
           )}
           <hr />
+          {!selectedEvent && markers.length == 0 && (
+            <h2>Start by searching for a location.</h2>
+          )}
+          {!selectedEvent && markers.length > 0 && (
+            <h2>Select an event to get its details.</h2>
+          )}
           {selectedEvent && (
             <Card>
               <CardBody>

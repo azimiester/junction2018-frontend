@@ -19,7 +19,8 @@ class App extends Component {
     center: null,
     selectedView: "map",
     selectedGridId: null,
-    gridPrediction: null
+    gridPrediction: null,
+    loading: false
   };
 
   async requestApi(lat, lng) {
@@ -70,14 +71,16 @@ class App extends Component {
     if (!this.state.selectedGridId) {
       return;
     }
+    this.setState({ loading: true, gridPrediction: null });
+
     const apiData = await axios.get(
       `http://10.100.31.58:5000/forecast/${this.state.selectedGridId}`
     );
-    this.setState({ gridPrediction: apiData.data });
+    this.setState({ gridPrediction: apiData.data, loading: false });
   }
   async polyCordsApi() {
     const { center } = this.state;
-
+    this.setState({ loading: true, selectedGridId: null, polyCords: null });
     const apiData = await axios.get(
       `http://10.100.31.58:8888/grid_id?lat=${center.lat}&long=${center.lng}`
     );
@@ -86,6 +89,7 @@ class App extends Component {
     if (polyCords) {
       this.setState(
         {
+          loading: false,
           selectedGridId: apiData.data.grid_id,
           polyCords: polyCords.map(p => ({ lat: p[0], lng: p[1] }))
         },
@@ -142,6 +146,7 @@ class App extends Component {
                 : null
             }
             addTag={this.addTag.bind(this)}
+            loading={this.state.loading}
           />
         )}
 
@@ -150,6 +155,11 @@ class App extends Component {
             graph={
               this.state.gridPrediction
                 ? this.state.gridPrediction.plot_img
+                : null
+            }
+            estimatedUsers={
+              this.state.gridPrediction
+                ? this.state.gridPrediction.daily_mean
                 : null
             }
           />
